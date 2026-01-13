@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반응형 카드 레이아웃 예제</title>
+    <style>
+        /* 기본 스타일 초기화 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 가독성 좋은 모던 폰트 */
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 
+           카드들을 담는 컨테이너 
+           - Flexbox를 사용하여 카드 정렬
+           - wrap 속성으로 화면이 좁아지면 줄바꿈 (반응형 기초)
+        */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* 가로 중앙 정렬 */
+            gap: 30px; /* 카드 사이의 간격 */
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* 
+           개별 카드 스타일 
+           - 배경색, 둥근 모서리, 그림자 적용
+           - Flexbox를 사용하여 내부 요소(이미지, 텍스트, 버튼) 정렬 관리
+        */
+        .card {
+            background-color: white;
+            border-radius: 12px; /* 모서리 둥글게 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+            overflow: hidden; /* 둥근 모서리 밖으로 이미지가 나가는 것 방지 */
+            width: 300px; /* 기본 카드 너비 */
+            display: flex;
+            flex-direction: column; /* 세로 방향 배치 */
+            transition: transform 0.3s ease; /* 호버 시 애니메이션 효과 */
+        }
+
+        .card:hover {
+            transform: translateY(-5px); /* 호버 시 살짝 위로 떠오르는 효과 */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 
+           1. 상단: 이미지 영역 
+           - object-fit: cover로 비율 유지하며 꽉 채우기
+        */
+        .card-image {
+            width: 100%;
+            height: 200px; /* 이미지 높이 고정 */
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 이미지 비율 유지하며 영역 채움 */
+            display: block;
+        }
+
+        /* 
+           2. 중단: 설명 텍스트 
+           - 패딩으로 여백 확보
+        */
+        .card-content {
+            padding: 20px;
+            flex-grow: 1; /* 남은 공간을 차지하여 버튼을 하단으로 밀어냄 (필요 시) */
+        }
+
+        .card-content h3 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 1.25rem;
+        }
+
+        .card-content p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* 
+           3. 하단: 버튼 영역 
+           - 중앙 정렬 및 패딩
+        */
+        .card-action {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #eee; /* 내용과 구분선 (선택사항) */
+        }
+
+        /* 버튼 스타일 */
+        .btn {
+            display: inline-block;
+            background-color: #007bff; /* 메인 색상 */
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px; /* 캡슐 형태 버튼 */
+            text-decoration: none; /* 링크 밑줄 제거 */
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3; /* 호버 시 색상 변경 */
+        }
+
+        /* 
+           반응형 미디어 쿼리 
+           - 화면 너비가 768px 이하(태블릿/모바일)일 때 적용
+           - 카드가 세로로 꽉 차게 보이도록 설정
+        */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .card {
+                width: 100%; /* 모바일에서는 가로폭 꽉 채우기 */
+                max-width: 400px; /* 너무 넓어지는 것 방지 */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 카드 1 -->
+        <article class="card">
+            <div class="card-image">
+                <!-- 실제 게임 이미지 사용 -->
+                <img src="게임 이미지.png" alt="게임 이미지">
+            </div>
+            <div class="card-content">
+                <h3>신스웨이브 게임</h3>
+                <p>박진감 넘치는 신스웨이브 음악과 함께 즐기는 게임입니다. 지금 바로 접속해서 최고 기록에 도전하세요!</p>
+            </div>
+            <div class="card-action">
+                <a href="synthwave_game.html" class="btn">접속하기</a>
+            </div>
+        </article>
+
+        <!-- 카드 2 -->
+        <article class="card">
+            <div class="card-image">
+                <img src="https://placehold.co/600x400/28a745/ffffff?text=Responsive" alt="반응형 웹 예시">
+            </div>
+            <div class="card-content">
+                <h3>반응형 레이아웃</h3>
+                <p>PC, 태블릿, 모바일 등 모든 기기에서 완벽하게 동작하는 유연한 레이아웃 구조를 설계합니다.</p>
+            </div>
+            <div class="card-action">
+                <a href="#" class="btn">접속하기</a>
+            </div>
+        </article>
+
+        <!-- 카드 3 -->
+        <article class="card">
+            <div class="card-image">
+                <img src="https://placehold.co/600x400/ffc107/ffffff?text=Optimization" alt="최적화 예시">
+            </div>
+            <div class="card-content">
+                <h3>성능 최적화</h3>
+                <p>빠른 로딩 속도와 효율적인 리소스 관리로 사용자에게 쾌적한 웹 브라우징 환경을 제공합니다.</p>
+            </div>
+            <div class="card-action">
+                <a href="#" class="btn">접속하기</a>
+            </div>
+        </article>
+    </div>
+
+</body>
+</html>
