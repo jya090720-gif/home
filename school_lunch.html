@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>하동여고 오늘의 급식</title>
+    <!-- Pretendard Font -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    
+    <style>
+        :root {
+            --primary-color: #ff8e72; 
+            --primary-hover: #ff7050;
+            --text-dark: #2d3436;
+            --text-gray: #636e72;
+            --bg-overlay: rgba(0, 0, 0, 0.6); 
+            --card-bg: rgba(255, 255, 255, 0.92); 
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), 
+                        url('급식.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-dark);
+        }
+
+        /* 홈 화면 (인트로) */
+        #home-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            width: 100%;
+            transition: opacity 0.5s ease;
+        }
+
+        #home-screen h1 {
+            font-size: 4rem;
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            font-weight: 800;
+        }
+
+        .search-btn {
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        /* 메인 화면 */
+        #main-screen {
+            display: none;
+            width: 90%;
+            max-width: 1000px;
+            text-align: center;
+            padding: 40px 20px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .date-wrapper {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 10px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 25px;
+            color: white;
+            cursor: pointer;
+        }
+
+        #date-picker {
+            background: transparent;
+            border: none;
+            color: white;
+            font-family: inherit;
+            font-size: 1.2rem;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+        }
+
+        #date-picker::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            margin-left: 10px;
+        }
+
+        /* 토글 버튼 */
+        .toggle-container {
+            display: inline-flex;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px;
+            border-radius: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .toggle-btn {
+            background: transparent;
+            border: none;
+            padding: 10px 35px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* 카드 그리드 */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease;
+            min-height: 280px;
+        }
+
+        .card h3 {
+            margin: 0 0 15px 0;
+            font-size: 1rem;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* 왼쪽 카드 */
+        .info-icon { font-size: 3.5rem; margin-bottom: 10px; }
+        .info-date { font-size: 1.1rem; color: var(--text-gray); }
+        .info-day { font-size: 1.8rem; font-weight: 800; margin: 5px 0; }
+        .info-type { 
+            font-size: 1.1rem; font-weight: 700; color: var(--primary-color);
+            background: #fff0eb; padding: 5px 15px; border-radius: 10px;
+        }
+
+        /* 가운데 카드 */
+        .menu-list {
+            list-style: none; padding: 0; margin: 0; width: 100%; text-align: left;
+        }
+        .menu-list li {
+            padding: 6px 0; font-size: 1.05rem; border-bottom: 1px solid #eee;
+            display: flex; align-items: center;
+        }
+        .menu-list li::before {
+            content: "•"; color: var(--primary-color); margin-right: 10px; font-weight: bold;
+        }
+
+        /* 오른쪽 카드 */
+        .cal-value { font-size: 3.5rem; font-weight: 900; color: var(--text-dark); }
+        .cal-unit { font-size: 1.2rem; color: var(--text-gray); }
+        .nutrient-info { 
+            margin-top: 15px; font-size: 0.75rem; color: #999; 
+            text-align: left; line-height: 1.4;
+        }
+
+        .loading, .error { color: white; font-size: 1.2rem; padding: 50px; }
+
+        .back-link {
+            margin-top: 30px; color: rgba(255,255,255,0.7); cursor: pointer;
+            text-decoration: underline; font-size: 0.9rem; display: block;
+        }
+
+        @media (max-width: 850px) {
+            .cards-grid { grid-template-columns: 1fr; }
+            .card { min-height: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 홈 화면 -->
+    <div id="home-screen">
+        <h1>하동여고 급식</h1>
+        <button class="search-btn" onclick="showMainScreen()">급식 조회</button>
+    </div>
+
+    <!-- 메인 화면 -->
+    <div id="main-screen">
+        <div class="date-wrapper">
+            <span>📅</span>
+            <input type="date" id="date-picker">
+        </div>
+
+        <br>
+
+        <div class="toggle-container">
+            <button id="btn-lunch" class="toggle-btn active" onclick="setMealType('중식')">점심</button>
+            <button id="btn-dinner" class="toggle-btn" onclick="setMealType('석식')">저녁</button>
+        </div>
+
+        <div id="menu-container">
+            <!-- 데이터 로드 전 표시 -->
+            <div class="loading">정보를 불러오고 있습니다...</div>
+        </div>
+
+        <span class="back-link" onclick="showHomeScreen()">← 처음으로 돌아가기</span>
+    </div>
+
+    <script>
+        const CONFIG = {
+            KEY: '7e9e7a950e6544da971fe8f43f6b9aa1',
+            ATPT_OFCDC_SC_CODE: 'S10',
+            SD_SCHUL_CODE: '9010120'
+        };
+
+        let currentDate = new Date();
+        let selectedMealType = '중식';
+        let currentMealData = [];
+
+        // 초기화
+        window.addEventListener('DOMContentLoaded', () => {
+            const datePicker = document.getElementById('date-picker');
+            datePicker.valueAsDate = currentDate;
+            datePicker.addEventListener('change', (e) => {
+                if(e.target.value) {
+                    currentDate = new Date(e.target.value);
+                    fetchMenu();
+                }
+            });
+        });
+
+        function showMainScreen() {
+            document.getElementById('home-screen').style.display = 'none';
+            document.getElementById('main-screen').style.display = 'block';
+            fetchMenu();
+        }
+
+        function showHomeScreen() {
+            document.getElementById('main-screen').style.display = 'none';
+            document.getElementById('home-screen').style.display = 'flex';
+        }
+
+        function setMealType(type) {
+            selectedMealType = type;
+            document.getElementById('btn-lunch').classList.toggle('active', type === '중식');
+            document.getElementById('btn-dinner').classList.toggle('active', type === '석식');
+            if (currentMealData.length > 0) renderMenu(currentMealData);
+        }
+
+        async function fetchMenu() {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = '<div class="loading">급식 정보를 불러오는 중입니다...</div>';
+
+            const dateStr = currentDate.getFullYear() + 
+                            String(currentDate.getMonth() + 1).padStart(2, '0') + 
+                            String(currentDate.getDate()).padStart(2, '0');
+            
+            const url = `https://open.neis.go.kr/hub/mealServiceDietInfo?KEY=${CONFIG.KEY}&Type=json&ATPT_OFCDC_SC_CODE=${CONFIG.ATPT_OFCDC_SC_CODE}&SD_SCHUL_CODE=${CONFIG.SD_SCHUL_CODE}&MLSV_YMD=${dateStr}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (!data.mealServiceDietInfo) {
+                    currentMealData = [];
+                    container.innerHTML = '<div class="error">선택한 날짜에 급식 정보가 없습니다 😢</div>';
+                    return;
+                }
+
+                currentMealData = data.mealServiceDietInfo[1].row;
+                renderMenu(currentMealData);
+            } catch (error) {
+                container.innerHTML = '<div class="error">데이터 로드 실패</div>';
+            }
+        }
+
+        function renderMenu(mealList) {
+            const container = document.getElementById('menu-container');
+            const filtered = mealList.filter(m => m.MMEAL_SC_NM === selectedMealType);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="error">${selectedMealType} 정보가 없습니다.</div>`;
+                return;
+            }
+
+            const meal = filtered[0];
+            const menuItems = meal.DDISH_NM.replace(/\([0-9\.]+\)/g, "").split("<br/>").filter(i => i.trim());
+            const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+            const icon = selectedMealType === '중식' ? '☀️' : '🌙';
+
+            container.innerHTML = `
+                <div class="cards-grid">
+                    <!-- 정보 카드 -->
+                    <div class="card">
+                        <h3>Meal Info</h3>
+                        <div class="info-icon">${icon}</div>
+                        <div class="info-date">${currentDate.getMonth()+1}월 ${currentDate.getDate()}일</div>
+                        <div class="info-day">${days[currentDate.getDay()]}</div>
+                        <div class="info-type">${selectedMealType}</div>
+                    </div>
+
+                    <!-- 메뉴 카드 -->
+                    <div class="card" style="align-items: flex-start; padding-left: 30px; padding-right: 30px;">
+                        <h3>Today's Menu</h3>
+                        <ul class="menu-list">
+                            ${menuItems.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <!-- 칼로리 카드 -->
+                    <div class="card">
+                        <h3>Calories</h3>
+                        <div class="cal-value">${meal.CAL_INFO.split(' ')[0]}</div>
+                        <div class="cal-unit">Kcal</div>
+                        <div class="nutrient-info">
+                            ${meal.NTR_INFO.split('<br/>').join(', ')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>반응형 카드 레이아웃 예제</title>
+    <title>윤아의 게시판</title>
+    <!-- 귀여운 감성 폰트 (Gamja Flower) & 본문 폰트 (Noto Sans KR) -->
+    <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    
     <style>
         /* 기본 스타일 초기화 */
         * {
@@ -13,79 +16,88 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 가독성 좋은 모던 폰트 */
+            font-family: 'Noto Sans KR', 'Segoe UI', sans-serif;
             background-color: #f4f4f9;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column; /* 세로 정렬로 변경 */
             min-height: 100vh;
-            padding: 20px;
         }
 
-        /* 
-           카드들을 담는 컨테이너 
-           - Flexbox를 사용하여 카드 정렬
-           - wrap 속성으로 화면이 좁아지면 줄바꿈 (반응형 기초)
-        */
-        .container {
+        /* 1. 헤더 스타일 */
+        header {
+            text-align: center;
+            padding: 50px 20px 30px 20px;
+            background-color: transparent;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .sub-text {
+            font-family: 'Gamja Flower', cursive; /* 귀여운 폰트 적용 */
+            font-size: 1.2rem;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        /* 2. 메인 콘텐츠 (카드 영역) */
+        main.container {
+            flex: 1; /* 남은 공간을 차지하여 푸터를 바닥으로 밀어냄 */
             display: flex;
             flex-wrap: wrap;
-            justify-content: center; /* 가로 중앙 정렬 */
-            gap: 30px; /* 카드 사이의 간격 */
-            max-width: 1200px;
+            justify-content: center;
+            align-items: center; /* 카드들을 수직 가운데 정렬 */
+            gap: 30px;
             width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
         }
 
-        /* 
-           개별 카드 스타일 
-           - 배경색, 둥근 모서리, 그림자 적용
-           - Flexbox를 사용하여 내부 요소(이미지, 텍스트, 버튼) 정렬 관리
-        */
+        /* 카드 스타일 (기존 유지) */
         .card {
             background-color: white;
-            border-radius: 12px; /* 모서리 둥글게 */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
-            overflow: hidden; /* 둥근 모서리 밖으로 이미지가 나가는 것 방지 */
-            width: 300px; /* 기본 카드 너비 */
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            width: 300px;
             display: flex;
-            flex-direction: column; /* 세로 방향 배치 */
-            transition: transform 0.3s ease; /* 호버 시 애니메이션 효과 */
+            flex-direction: column;
+            transition: transform 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-5px); /* 호버 시 살짝 위로 떠오르는 효과 */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
         }
 
-        /* 
-           1. 상단: 이미지 영역 
-           - object-fit: cover로 비율 유지하며 꽉 채우기
-        */
         .card-image {
             width: 100%;
-            height: 200px; /* 이미지 높이 고정 */
+            height: 200px;
         }
 
         .card-image img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* 이미지 비율 유지하며 영역 채움 */
+            object-fit: cover;
             display: block;
         }
 
-        /* 
-           2. 중단: 설명 텍스트 
-           - 패딩으로 여백 확보
-        */
         .card-content {
-            padding: 20px;
-            flex-grow: 1; /* 남은 공간을 차지하여 버튼을 하단으로 밀어냄 (필요 시) */
+            padding: 25px 20px;
+            flex-grow: 1;
+            text-align: left;
         }
 
         .card-content h3 {
             margin-bottom: 10px;
             color: #333;
             font-size: 1.25rem;
+            font-weight: 700;
         }
 
         .card-content p {
@@ -94,57 +106,120 @@
             font-size: 0.95rem;
         }
 
-        /* 
-           3. 하단: 버튼 영역 
-           - 중앙 정렬 및 패딩
-        */
         .card-action {
             padding: 20px;
             text-align: center;
-            border-top: 1px solid #eee; /* 내용과 구분선 (선택사항) */
+            border-top: 1px solid #f0f0f0;
         }
 
-        /* 버튼 스타일 */
         .btn {
             display: inline-block;
-            background-color: #007bff; /* 메인 색상 */
+            background-color: #03C75A; /* 네이버 그린 느낌 */
             color: white;
-            padding: 10px 25px;
-            border-radius: 25px; /* 캡슐 형태 버튼 */
-            text-decoration: none; /* 링크 밑줄 제거 */
+            padding: 10px 30px;
+            border-radius: 25px;
+            text-decoration: none;
             font-weight: 600;
             transition: background-color 0.3s ease;
         }
 
         .btn:hover {
-            background-color: #0056b3; /* 호버 시 색상 변경 */
+            background-color: #029f48;
         }
 
-        /* 
-           반응형 미디어 쿼리 
-           - 화면 너비가 768px 이하(태블릿/모바일)일 때 적용
-           - 카드가 세로로 꽉 차게 보이도록 설정
-        */
+        /* 3. 푸터 스타일 (네이버 메인 스타일) */
+        footer {
+            background-color: #ffffff;
+            border-top: 1px solid #e4e8eb; /* 얇은 상단 테두리 */
+            padding: 25px 0;
+            margin-top: auto; /* 내용이 적어도 바닥에 고정 */
+        }
+
+        .footer-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            font-size: 0.85rem;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #888;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #333;
+            text-decoration: underline;
+        }
+
+        /* 구분선 효과 (::after) - 원하면 주석 해제하여 사용
+        .footer-links a:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            right: -11px;
+            top: 3px;
+            width: 1px;
+            height: 11px;
+            background-color: #e4e8eb;
+        } */
+
+        /* 네이버 로고 박스 */
+        .naver-logo-link {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .naver-logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 24px;
+            height: 24px;
+            background-color: #03C75A; /* 네이버 시그니처 그린 */
+            color: white;
+            font-weight: 900;
+            font-family: sans-serif;
+            font-size: 14px;
+            border-radius: 2px; /* 살짝 둥근 모서리 */
+        }
+
+        /* 반응형 */
         @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                align-items: center;
+            .footer-inner {
+                flex-direction: column-reverse;
+                gap: 20px;
             }
-            
-            .card {
-                width: 100%; /* 모바일에서는 가로폭 꽉 채우기 */
-                max-width: 400px; /* 너무 넓어지는 것 방지 */
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- 카드 1 -->
+    <!-- 1. 헤더 영역 -->
+    <header>
+        <h1>윤아의 게시판</h1>
+        <div class="sub-text">made by 최영재 여친</div>
+    </header>
+
+    <!-- 2. 메인 콘텐츠 영역 -->
+    <main class="container">
+        <!-- 카드 1: 신스웨이브 게임 -->
         <article class="card">
             <div class="card-image">
-                <!-- 실제 게임 이미지 사용 -->
                 <img src="게임 이미지.png" alt="게임 이미지">
             </div>
             <div class="card-content">
@@ -156,34 +231,50 @@
             </div>
         </article>
 
-        <!-- 카드 2 -->
+        <!-- 카드 2: 동물상 테스트 -->
         <article class="card">
             <div class="card-image">
-                <img src="https://placehold.co/600x400/28a745/ffffff?text=Responsive" alt="반응형 웹 예시">
+                <img src="동물.png" alt="동물 이미지">
             </div>
             <div class="card-content">
-                <h3>반응형 레이아웃</h3>
-                <p>PC, 태블릿, 모바일 등 모든 기기에서 완벽하게 동작하는 유연한 레이아웃 구조를 설계합니다.</p>
+                <h3>동물상 테스트</h3>
+                <p>나와 닮은 동물을 찾아보세요! 사진을 업로드하면 인공지능이 당신의 숨겨진 동물상을 분석해 드립니다.</p>
             </div>
             <div class="card-action">
-                <a href="#" class="btn">접속하기</a>
+                <a href="animal_face.html" class="btn">접속하기</a>
             </div>
         </article>
 
-        <!-- 카드 3 -->
+        <!-- 카드 3: 급식 (수정됨) -->
         <article class="card">
             <div class="card-image">
-                <img src="https://placehold.co/600x400/ffc107/ffffff?text=Optimization" alt="최적화 예시">
+                <img src="급식.jpg" alt="급식 이미지">
             </div>
             <div class="card-content">
-                <h3>성능 최적화</h3>
-                <p>빠른 로딩 속도와 효율적인 리소스 관리로 사용자에게 쾌적한 웹 브라우징 환경을 제공합니다.</p>
+                <h3>오늘의 급식</h3>
+                <p>하동여고의 맛있는 급식 정보를 확인해 보세요! 실시간 메뉴와 칼로리 정보를 깔끔한 UI로 제공합니다.</p>
             </div>
             <div class="card-action">
-                <a href="#" class="btn">접속하기</a>
+                <a href="school_lunch.html" class="btn">접속하기</a>
             </div>
         </article>
-    </div>
+    </main>
+
+    <!-- 3. 푸터 영역 -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-links">
+                <a href="#">홈</a>
+                <a href="#">게시판</a>
+                <a href="#">개인정보정책</a>
+                <a href="#">이용안내</a>
+                <a href="#">문의하기</a>
+            </div>
+            <a href="mailto:jya090720@naver.com" class="naver-logo-link" title="메일 보내기">
+                <span class="naver-logo">N</span>
+            </a>
+        </div>
+    </footer>
 
 </body>
 </html>
